@@ -23,28 +23,22 @@ namespace NotificationFunction
         {
             log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
 
-            using (var memoryStream = new MemoryStream())
+            using var memoryStream = new MemoryStream();
+            using var strmReader = new StreamReader(myBlob);
+            using var csv = new CsvReader(strmReader);
+            if (csv.Read())
             {
-                using (var tr = new StreamReader(myBlob))
+                log.LogInformation("Reading CSV");
+                csv.ReadHeader();
+                while (csv.Read())
                 {
-                    using (var csv = new CsvReader(tr))
+                    var record = new CostData
                     {
-                        if (csv.Read())
-                        {
-                            log.LogInformation("Reading CSV");
-                            csv.ReadHeader();
-                            while (csv.Read())
-                            {
-                                var record = new CostData
-                                {
-                                    ConsumedService = csv.GetField("ConsumedService"),
-                                    ResourceGroup= csv.GetField("ConsumedService"),
-                                    ResourceType= csv.GetField("ConsumedService"),
-                                    Cost = csv.GetField("ConsumedService")
-                                };
-                            }
-                        }
-                    }
+                        ConsumedService = csv.GetField("ConsumedService"),
+                        ResourceGroup = csv.GetField("ResourceGroup"),
+                        ResourceType = csv.GetField("ResourceType"),
+                        Cost = csv.GetField("Cost")
+                    };
                 }
             }
         }
