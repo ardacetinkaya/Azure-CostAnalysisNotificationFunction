@@ -1,46 +1,31 @@
 namespace NotificationFunction
 {
-    using CsvHelper;
+    using CostLibrary;
     using Microsoft.Azure.WebJobs;
     using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
+    using System.Threading.Tasks;
 
     public static class Notification
     {
-        class CostData
-        {
-            public string Resource { get; set; }
-            public string Cost { get; set; }
-            public string Name { get; set; }
-            public string ResourceGroup { get; set; }
-            public string ConsumedService { get; set; }
-            public string ResourceType { get; set; }
-        }
 
         [FunctionName("Notification")]
-        public static void Run([BlobTrigger("cost/report/{name}", Connection = "StorageConnection")]Stream myBlob, string name, ILogger log)
+        public async static Task Run([BlobTrigger("cost/report/{name}", Connection = "StorageConnection")]Stream myBlob, string name, ILogger log)
         {
-            log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
-
-            using var memoryStream = new MemoryStream();
-            using var strmReader = new StreamReader(myBlob);
-            using var csv = new CsvReader(strmReader);
-            if (csv.Read())
+            
+            try
             {
-                log.LogInformation("Reading CSV");
-                csv.ReadHeader();
-                while (csv.Read())
-                {
-                    var record = new CostData
-                    {
-                        ConsumedService = csv.GetField("ConsumedService"),
-                        ResourceGroup = csv.GetField("ResourceGroup"),
-                        ResourceType = csv.GetField("ResourceType"),
-                        Cost = csv.GetField("Cost")
-                    };
-                }
+                FileAnalysis fa = new FileAnalysis(log);
+
+                var contents = await fa.ReadFile(myBlob, name);
             }
+            catch (Exception ex)
+            {
+                log.LogError(ex, ex.Message);
+            }
+       
+
         }
     }
 }
