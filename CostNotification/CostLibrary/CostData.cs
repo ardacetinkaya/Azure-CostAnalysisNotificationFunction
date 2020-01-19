@@ -1,11 +1,13 @@
-﻿namespace CostLibrary
+﻿using System;
+
+namespace CostLibrary
 {
     public class CostData
     {
         public string SubscriptionGuid { get; set; }
         public string ResourceGroup    { get; set; }
         public string ResourceLocation { get; set; }
-        public string UsageDateTime    { get; set; }
+        public DateTime UsageDateTime    { get; set; }
         public string MeterCategory    { get; set; }
         public string MeterSubcategory { get; set; }
         public string MeterId          { get; set; }
@@ -13,7 +15,7 @@
         public string MeterRegion      { get; set; }
         public string UsageQuantity    { get; set; }
         public string ResourceRate     { get; set; }
-        public string PreTaxCost       { get; set; }
+        public decimal PreTaxCost       { get; set; }
         public string ConsumedService  { get; set; }
         public string ResourceType     { get; set; }
         public string InstanceId       { get; set; }
