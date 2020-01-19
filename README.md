@@ -6,7 +6,7 @@ This repo is a demostration for the Azure Function which is triggered by BLOB St
 
 This is just for some simple scenarios such as; proccess the cost data, share the cost information, follow-up the usage...etc.
 
-Beside this simple implementation also;
+Beside this simple implementation, there is also some other options to touch costs in Azure;
 - <a href="https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/usage-rate-card-overview" target="_blank">Azure Billing REST API</a> 
 - <a href="https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/consumption-api-overview" target="_blank">Azure Consumption REST API</a> 
 - <a href="https://docs.microsoft.com/en-us/cli/azure/billing?view=azure-cli-latest" target="_blank">az CLI</a> 
