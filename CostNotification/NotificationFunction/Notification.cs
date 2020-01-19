@@ -43,7 +43,7 @@ namespace NotificationFunction
                     UsageDate = $"{s.Key.Year}/{String.Format("{0:00}", s.Key.Month)}",
                     s.Key.ResourceGroup,
                     s.Key.ServiceName,
-                    Sum = s.Sum(s => s.PreTaxCost),
+                    Sum = s.Sum(s => Math.Round(s.PreTaxCost, 2)),
                     s.First().Currency
                 });
                 

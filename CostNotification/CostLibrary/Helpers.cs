@@ -90,13 +90,11 @@ namespace CostLibrary
 
         public static string ToHtmlTable<T>(this List<T> listOfClassObjects)
         {
-            var ret = string.Empty;
-
             return listOfClassObjects == null || !listOfClassObjects.Any()
-                ? ret
+                ? string.Empty
                 : "<table>" +
                   listOfClassObjects.First().GetType().GetProperties().Select(p => p.Name).ToList().ToColumnHeaders() +
-                  listOfClassObjects.Aggregate(ret, (current, t) => current + t.ToHtmlTableRow()) +
+                  listOfClassObjects.Aggregate(string.Empty, (current, t) => current + t.ToHtmlTableRow()) +
                   "</table>";
         }
 
@@ -119,20 +117,17 @@ namespace CostLibrary
 
         internal static string ToHtmlTableRow<T>(this T classObject)
         {
-            var ret = string.Empty;
-
             return classObject == null
-                ? ret
+                ? string.Empty
                 : "<tr>" +
                   classObject.GetType()
                       .GetProperties()
-                      .Aggregate(ret,
+                      .Aggregate(string.Empty,
                           (current, prop) =>
                               current + ("<td style='font-size: 11pt; font-weight: normal; border: 1pt solid black'>" +
                                          (Convert.ToString(prop.GetValue(classObject, null)).Length <= 100
                                              ? Convert.ToString(prop.GetValue(classObject, null))
-                                             : Convert.ToString(prop.GetValue(classObject, null)).Substring(0, 100) +
-                                               "...") +
+                                             : Convert.ToString(prop.GetValue(classObject, null)).Substring(0, 100) + "...") +
                                          "</td>")) + "</tr>";
         }
     }
