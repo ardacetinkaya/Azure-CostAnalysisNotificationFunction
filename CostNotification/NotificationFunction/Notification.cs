@@ -26,8 +26,10 @@ namespace NotificationFunction
                     .Build();
 
                 FileAnalysis fa = new FileAnalysis(log);
+                
 
                 var contents = await fa.ReadFile(myBlob, name);
+                log.LogInformation($"# of records {contents.Count}");
 
                 var filtered = contents.ToList().GroupBy(g => new
                 {
@@ -36,14 +38,13 @@ namespace NotificationFunction
                     g.UsageDateTime.Year,
                     g.UsageDateTime.Month
 
-                }).Select(s => new
+                }).OrderByDescending(o=>o.First().UsageDateTime).Select(s => new
                 {
-                    Period = $"{s.Key.Year} - {s.Key.Month}",
-                    ResourceGroup = s.Key.ResourceGroup,
-                    ServiceName = s.Key.ServiceName,
-                    Sum = s.Sum(s => s.PreTaxCost)
-
-
+                    UsageDate = $"{s.Key.Year}/{String.Format("{0:00}", s.Key.Month)}",
+                    s.Key.ResourceGroup,
+                    s.Key.ServiceName,
+                    Sum = s.Sum(s => s.PreTaxCost),
+                    s.First().Currency
                 });
                 
                 var output = filtered.ToList().ToHtmlTable();
